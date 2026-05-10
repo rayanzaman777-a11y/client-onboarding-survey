@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Website Client Onboarding Survey</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f1f3d;
+    --navy-mid: #1a3460;
+    --gold: #c8963e;
+    --gold-light: #e8b96a;
+    --cream: #f9f6f0;
+    --cream-dark: #f0ebe0;
+    --text: #1a1a2e;
+    --text-muted: #6b7280;
+    --border: #ddd5c3;
+    --white: #ffffff;
+    --success: #2d6a4f;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem 4rem;
+    color: var(--text);
+  }
+
+  .survey-wrapper { max-width: 720px; width: 100%; }
+
+  /* Header */
+  .survey-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding: 2.5rem 2rem;
+    background: var(--navy);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+  }
+  .survey-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(200,150,62,0.04) 40px,
+      rgba(200,150,62,0.04) 41px
+    );
+  }
+  .survey-header .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .survey-header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 2rem;
+    color: #fff;
+    line-height: 1.2;
+    position: relative;
+    margin-bottom: 0.6rem;
+  }
+  .survey-header p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    font-weight: 300;
+    position: relative;
+  }
+
+  /* Progress */
+  .progress-bar-outer {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.75rem;
+  }
+  .progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 12px;
+  }
+  .progress-labels .label-current { color: var(--navy); font-weight: 600; }
+  .progress-labels .label-count { color: var(--text-muted); }
+  .progress-track {
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy-mid), var(--gold));
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+  .step-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 0.85rem;
+    justify-content: center;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cream-dark);
+    border: 1.5px solid var(--border);
+    transition: all 0.3s;
+  }
+  .step-dot.active { background: var(--navy); border-color: var(--navy); }
+  .step-dot.done { background: var(--gold); border-color: var(--gold); }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem 2.25rem;
+    margin-bottom: 1.25rem;
+    animation: fadeSlide 0.35s ease;
+  }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.35rem;
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+  }
+  .card-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+
+  /* Form Fields */
+  .field-group { display: grid; gap: 1.25rem; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.01em;
+  }
+  label span.req { color: var(--gold); margin-left: 2px; }
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  select,
+  textarea {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--cream);
+    color: var(--text);
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    width: 100%;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--navy);
+    background: var(--white);
+  }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+  select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  .hint { font-size: 12px; color: var(--text-muted); }
+
+  /* Checkbox grid */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+    gap: 8px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--cream);
+    user-select: none;
+  }
+  .checkbox-item:hover { border-color: var(--navy-mid); background: #eef0f7; }
+  .checkbox-item.checked { border-color: var(--navy); background: #e8ecf5; }
+  .checkbox-item input { display: none; }
+  .check-box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    background: var(--white);
+  }
+  .checkbox-item.checked .check-box {
+    background: var(--navy);
+    border-color: var(--navy);
+  }
+  .check-box svg { display: none; }
+  .checkbox-item.checked .check-box svg { display: block; }
+  .checkbox-item span { font-size: 13px; font-weight: 500; color: var(--text); }
+
+  /* Radio group */
+  .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .radio-pill {
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s;
+    background: var(--cream);
+    user-select: none;
+  }
+  .radio-pill:hover { border-color: var(--navy-mid); }
+  .radio-pill.selected { border-color: var(--navy); background: #e8ecf5; color: var(--navy); }
+  .radio-pill input { display: none; }
+  .radio-dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: var(--white);
+    transition: all 0.2s;
+  }
+  .radio-pill.selected .radio-dot { border-color: var(--navy); background: var(--navy); }
+  .radio-pill.selected .radio-dot::after {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: white;
+  }
+
+  /* Tags input */
+  .tags-input-wrap {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--cream);
+    padding: 8px 10px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    cursor: text;
+    min-height: 44px;
+    transition: border-color 0.2s;
+  }
+  .tags-input-wrap:focus-within { border-color: var(--navy); background: var(--white); }
+  .tag {
+    background: var(--navy);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .tag-x { cursor: pointer; opacity: 0.7; font-size: 14px; line-height: 1; }
+  .tag-x:hover { opacity: 1; }
+  .tags-input {
+    border: none !important; background: transparent !important;
+    padding: 2px 4px !important;
+    font-size: 13px !important;
+    flex: 1; min-width: 100px;
+    outline: none;
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex; justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+  .btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 11px 28px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-primary {
+    background: var(--navy);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--navy); color: var(--navy); }
+  .btn-gold {
+    background: var(--gold);
+    color: white;
+    padding: 13px 36px;
+    font-size: 15px;
+    border-radius: 30px;
+  }
+  .btn-gold:hover { background: var(--gold-light); }
+
+  /* Summary / review */
+  .summary-grid { display: grid; gap: 1rem; }
+  .summary-section {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .summary-section-title {
+    background: var(--cream-dark);
+    padding: 9px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--navy);
+  }
+  .summary-rows { padding: 10px 14px; display: grid; gap: 7px; }
+  .summary-row {
+    display: flex; gap: 8px;
+    font-size: 13px;
+  }
+  .summary-row .sr-label { color: var(--text-muted); min-width: 140px; flex-shrink: 0; }
+  .summary-row .sr-val { color: var(--text); font-weight: 500; }
+
+  /* Completion */
+  .completion {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    animation: fadeSlide 0.4s ease;
+  }
+  .completion-icon {
+    width: 64px; height: 64px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .completion h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.8rem;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+  .completion p {
+    color: var(--text-muted);
+    font-size: 14px;
+    max-width: 380px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
+  .completion-meta {
+    display: flex; gap: 1.5rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  .completion-meta .meta-item {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .completion-meta .meta-item strong { display: block; color: var(--navy); font-size: 15px; }
+
+  /* Print button */
+  .btn-print {
+    background: var(--cream);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 20px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-print:hover { border-color: var(--navy); color: var(--navy); }
+
+  @media (max-width: 580px) {
+    .field-row { grid-template-columns: 1fr; }
+    .card { padding: 1.5rem 1.25rem; }
+    .survey-header h1 { font-size: 1.6rem; }
+  }
+  @media print {
+    body { background: white; padding: 0; }
+    .btn-row, .btn-print, .step-dots, .progress-bar-outer { display: none; }
+    .card { border: 1px solid #ddd; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="survey-wrapper">
+
+  <!-- Header -->
+  <div class="survey-header">
+    <div class="badge">New Client</div>
+    <h1>Website Onboarding Survey</h1>
+    <p>Please complete all sections so we can build the perfect website for you.</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar-outer" id="progressArea">
+    <div class="progress-labels">
+      <span class="label-current" id="stepLabel">Step 1 — Basic Information</span>
+      <span class="label-count" id="stepCount">1 of 6</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill" style="width:16.6%"></div>
+    </div>
+    <div class="step-dots" id="stepDots"></div>
+  </div>
+
+  <!-- Form Steps -->
+  <div id="surveyBody"></div>
+
+</div>
+
+<script>
+const steps = [
+  { label: "Basic Information" },
+  { label: "Business Details" },
+  { label: "Branding & Design" },
+  { label: "Website Structure" },
+  { label: "Services & Coverage" },
+  { label: "Review & Submit" }
+];
+
+const formData = {
+  businessName:'', contactName:'', email:'', phone:'', industry:'', existingUrl:'',
+  socialLinks:'', address:'', city:'', state:'', zip:'', timezone:'', yearsInBusiness:'',
+  businessDesc:'',
+  hasBranding:'', hasLogo:'', brandColors:'', fonts:'', hasGuidelines:'',
+  websitesLike:'', websitesDislike:'',
+  pages:[], hasContent:'', contentProvider:'',
+  coverageRadius:'', extraZips:'',
+  services:'', additionalNotes:'', specialRequests:''
+};
+
+const pageOptions = ['Home','About','Services','Contact','FAQ','Blog','Shop','Portfolio','Testimonials','Booking Page','Privacy Policy','Terms & Conditions'];
+const industries = ['E-Commerce / Retail','Health & Wellness','Legal / Law Firm','Real Estate','Restaurant / Food','Technology / SaaS','Education / Tutoring','Creative / Portfolio','Finance / Accounting','Construction / Trade','Beauty / Salon','Non-Profit','Consulting','Other'];
+const timezones = ['UTC-8 (PST)','UTC-7 (MST)','UTC-6 (CST)','UTC-5 (EST)','UTC+0 (GMT)','UTC+1 (CET)','UTC+5:30 (IST)','UTC+6 (BST)','UTC+8 (CST China)','UTC+9 (JST)','UTC+10 (AEST)','UTC+12 (NZST)'];
+
+let currentStep = 0;
+let urlTags = [];
+
+function buildDots() {
+  const c = document.getElementById('stepDots');
+  c.innerHTML = steps.map((s,i) => `<div class="step-dot ${i<currentStep?'done':i===currentStep?'active':''}" id="dot${i}"></div>`).join('');
+}
+
+function updateProgress() {
+  const pct = ((currentStep + 1) / steps.length * 100).toFixed(1);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('stepLabel').textContent = `Step ${currentStep+1} — ${steps[currentStep].label}`;
+  document.getElementById('stepCount').textContent = `${currentStep+1} of ${steps.length}`;
+  buildDots();
+}
+
+function renderStep() {
+  updateProgress();
+  const body = document.getElementById('surveyBody');
+  body.innerHTML = '';
+  const renderers = [step1, step2, step3, step4, step5, step6];
+  renderers[currentStep]();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function field(id, label, type='text', placeholder='', required=false, hint='') {
+  const req = required ? '<span class="req">*</span>' : '';
+  return `<div class="field">
+    <label for="${id}">${label}${req}</label>
+    <input type="${type}" id="${id}" placeholder="${placeholder}" value="${formData[id]||''}" oninput="formData['${id}']=this.value" />
+    ${hint ? `<span class="hint">${hint}</span>` : ''}
+  </div>`;
+}
+function textareaField(id, label, placeholder='', hint='') {
+  return `<div class="field">
+    <label for="${id}">${label}</label>
+    <textarea id="${id}" placeholder="${placeholder}" oninput="formData['${id}']=this.value">${formData[id]||''}</textarea>
+    ${hint ? `<span class="hint">${hint}</span>` : ''}
+  </div>`;
+}
+function selectField(id, label, options, required=false) {
+  const req = required ? '<span class="req">*</span>' : '';
+  const opts = options.map(o => `<option value="${o}" ${formData[id]===o?'selected':''}>${o}</option>`).join('');
+  return `<div class="field">
+    <label for="${id}">${label}${req}</label>
+    <select id="${id}" onchange="formData['${id}']=this.value">
+      <option value="">— Select —</option>
+      ${opts}
+    </select>
+  </div>`;
+}
+function radioField(id, label, options) {
+  const pills = options.map(o => `<label class="radio-pill ${formData[id]===o?'selected':''}" onclick="selectRadio('${id}','${o}',this)">
+    <input type="radio" name="${id}" value="${o}" ${formData[id]===o?'checked':''} />
+    <span class="radio-dot"></span>${o}
+  </label>`).join('');
+  return `<div class="field"><label>${label}</label><div class="radio-group">${pills}</div></div>`;
+}
+function selectRadio(id, val, el) {
+  formData[id] = val;
+  document.querySelectorAll(`[name="${id}"]`).forEach(r => r.closest('.radio-pill').classList.remove('selected'));
+  el.classList.add('selected');
+}
+function togglePage(page) {
+  const i = formData.pages.indexOf(page);
+  if (i>-1) formData.pages.splice(i,1);
+  else formData.pages.push(page);
+  const items = document.querySelectorAll('.checkbox-item');
+  items.forEach(item => {
+    const p = item.dataset.page;
+    item.classList.toggle('checked', formData.pages.includes(p));
+  });
+}
+function addUrlTag(val) {
+  if (!val.trim()) return;
+  urlTags.push(val.trim());
+  formData.websitesLike = urlTags.join(', ');
+  document.getElementById('urlInput').value = '';
+  renderUrlTags();
+}
+function removeTag(i) {
+  urlTags.splice(i,1);
+  formData.websitesLike = urlTags.join(', ');
+  renderUrlTags();
+}
+function renderUrlTags() {
+  const wrap = document.getElementById('tagWrap');
+  if (!wrap) return;
+  const tags = urlTags.map((t,i) => `<span class="tag">${t}<span class="tag-x" onclick="removeTag(${i})">×</span></span>`).join('');
+  document.getElementById('tagsContainer').innerHTML = tags;
+}
+
+function nav(showBack=true) {
+  const isLast = currentStep === steps.length-1;
+  return `<div class="btn-row" style="margin-top:1.5rem">
+    ${showBack && currentStep>0 ? `<button class="btn btn-secondary" onclick="prev()">← Back</button>` : '<div></div>'}
+    ${!isLast ? `<button class="btn btn-primary" onclick="next()">Continue →</button>` : ''}
+  </div>`;
+}
+
+function step1() {
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="card">
+    <div class="card-title">Basic Business Information</div>
+    <div class="card-subtitle">Tell us who you are and how we can reach you.</div>
+    <div class="field-group">
+      <div class="field-row">
+        ${field('businessName','Business Name','text','e.g. Bright Home Realty',true)}
+        ${field('contactName','Contact Person','text','Your full name',true)}
+      </div>
+      <div class="field-row">
+        ${field('email','Email Address','email','hello@yourbusiness.com',true)}
+        ${field('phone','Phone Number','tel','+1 (555) 000-0000',true)}
+      </div>
+      ${selectField('industry','Industry / Niche',industries,true)}
+      ${field('existingUrl','Existing Website URL','url','https://yourwebsite.com','','Leave blank if you don\'t have one yet.')}
+      ${textareaField('socialLinks','Social Media Links','e.g. Facebook: fb.com/page, Instagram: @handle, LinkedIn: ...','List any relevant profiles.')}
+    </div>
+  </div>
+  ${nav(false)}`;
+}
+
+function step2() {
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="card">
+    <div class="card-title">Business Details</div>
+    <div class="card-subtitle">Help us understand your business location and background.</div>
+    <div class="field-group">
+      ${field('address','Registered Address','text','Street address')}
+      <div class="field-row">
+        ${field('city','City','text','e.g. Austin')}
+        ${field('state','State / Province','text','e.g. Texas')}
+      </div>
+      <div class="field-row">
+        ${field('zip','ZIP / Postal Code','text','e.g. 78701')}
+        ${selectField('timezone','Time Zone',timezones)}
+      </div>
+      ${field('yearsInBusiness','Years in Business','number','e.g. 5',false,'How long has your business been operating?')}
+      ${textareaField('businessDesc','Business Description','Describe what your business does, your target customers, and what sets you apart...','Please be as detailed as possible — this helps us write your website copy.')}
+    </div>
+  </div>
+  ${nav()}`;
+}
+
+function step3() {
+  const existing = formData.websitesLike ? formData.websitesLike.split(',').map(s=>s.trim()).filter(Boolean) : [];
+  if (!urlTags.length && existing.length) urlTags = existing;
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="card">
+    <div class="card-title">Branding & Design</div>
+    <div class="card-subtitle">Share your existing brand assets and style preferences.</div>
+    <div class="field-group">
+      ${radioField('hasBranding','Do you already have branding?',['Yes, fully developed','Partially (some assets)','No, starting from scratch'])}
+      ${radioField('hasLogo','Do you have a logo?',['Yes, print-ready','Yes, but needs updating','No logo yet'])}
+      ${field('brandColors','Brand Colors','text','e.g. Navy #0f1f3d, Gold #c8963e','','Enter hex codes or color names if known.')}
+      ${field('fonts','Brand Fonts','text','e.g. Playfair Display, Lato','','Leave blank if unsure.')}
+      ${radioField('hasGuidelines','Do you have brand guidelines?',['Yes, I will share them','No, but I have examples','No guidelines'])}
+      <div class="field">
+        <label>Websites You Like <span class="hint" style="font-weight:400">(add up to 5 URLs)</span></label>
+        <div class="tags-input-wrap" id="tagWrap" onclick="document.getElementById('urlInput').focus()">
+          <span id="tagsContainer"></span>
+          <input type="url" id="urlInput" class="tags-input" placeholder="Paste URL and press Enter" 
+            onkeydown="if(event.key==='Enter'){event.preventDefault();addUrlTag(this.value)}"
+            onblur="if(this.value.trim())addUrlTag(this.value)" />
+        </div>
+        <span class="hint">Press Enter after each URL to add it as a tag.</span>
+      </div>
+      ${textareaField('websitesDislike','Websites You Dislike','Share any websites whose design you want to avoid...','Optional — helps us understand what NOT to do.')}
+    </div>
+  </div>
+  ${nav()}`;
+  renderUrlTags();
+}
+
+function step4() {
+  const boxes = pageOptions.map(p => `
+    <div class="checkbox-item ${formData.pages.includes(p)?'checked':''}" data-page="${p}" onclick="togglePage('${p}')">
+      <div class="check-box">
+        <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+          <path d="M1 4l3 3 5-6" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <span>${p}</span>
+    </div>`).join('');
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="card">
+    <div class="card-title">Website Structure</div>
+    <div class="card-subtitle">Select the pages you need and tell us about your content.</div>
+    <div class="field-group">
+      <div class="field">
+        <label>Pages Needed <span class="req">*</span></label>
+        <span class="hint" style="margin-bottom:8px;display:block">Select all that apply — you can add more later.</span>
+        <div class="checkbox-grid">${boxes}</div>
+      </div>
+      ${radioField('hasContent','Do you already have website content?',['Yes, fully written','Partially ready','No, I need help with content'])}
+      ${radioField('contentProvider','Who will provide text, images & videos?',['I will provide everything','You provide text, I have images','You provide everything','Mixture — let\'s discuss'])}
+    </div>
+  </div>
+  ${nav()}`;
+}
+
+function step5() {
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="card">
+    <div class="card-title">Services & Coverage Area</div>
+    <div class="card-subtitle">Tell us what you offer and where you serve customers.</div>
+    <div class="field-group">
+      ${field('coverageRadius','Coverage Radius','text','e.g. 50 miles, Nationwide, All of Texas','','How far do you serve customers from your base?')}
+      ${textareaField('extraZips','Additional ZIP Codes / Cities Served','e.g. 78701, 78702, Austin, Round Rock, Cedar Park...','Optional — helps with local SEO.')}
+      ${textareaField('services','Services or Products Offered','List each service or product on a new line...\ne.g.\n• Custom website design\n• E-commerce development\n• SEO optimization','Be specific — this helps us build your Services page.')}
+      ${textareaField('additionalNotes','Anything else we should know?','Share any extra context, concerns, or must-haves for the project...')}
+      ${textareaField('specialRequests','Special Requests','e.g. multilingual support, accessibility requirements, specific integrations...')}
+    </div>
+  </div>
+  ${nav()}`;
+}
+
+function step6() {
+  const pagesStr = formData.pages.length ? formData.pages.join(', ') : 'None selected';
+  const summaryData = [
+    { title:'Basic Information', rows:[
+      ['Business Name', formData.businessName],
+      ['Contact Person', formData.contactName],
+      ['Email', formData.email],
+      ['Phone', formData.phone],
+      ['Industry', formData.industry],
+      ['Website URL', formData.existingUrl || '—'],
+      ['Social Media', formData.socialLinks || '—'],
+    ]},
+    { title:'Business Details', rows:[
+      ['Address', [formData.address,formData.city,formData.state,formData.zip].filter(Boolean).join(', ') || '—'],
+      ['Time Zone', formData.timezone || '—'],
+      ['Years in Business', formData.yearsInBusiness || '—'],
+      ['Description', formData.businessDesc ? formData.businessDesc.substring(0,80)+'…' : '—'],
+    ]},
+    { title:'Branding', rows:[
+      ['Has Branding', formData.hasBranding || '—'],
+      ['Has Logo', formData.hasLogo || '—'],
+      ['Brand Colors', formData.brandColors || '—'],
+      ['Fonts', formData.fonts || '—'],
+      ['Websites Liked', formData.websitesLike || '—'],
+    ]},
+    { title:'Website Structure', rows:[
+      ['Pages Needed', pagesStr],
+      ['Content Ready', formData.hasContent || '—'],
+      ['Content Provider', formData.contentProvider || '—'],
+    ]},
+    { title:'Services & Coverage', rows:[
+      ['Coverage Radius', formData.coverageRadius || '—'],
+      ['Additional Areas', formData.extraZips ? formData.extraZips.substring(0,60)+'…' : '—'],
+      ['Services', formData.services ? formData.services.substring(0,80)+'…' : '—'],
+    ]},
+  ];
+  const sections = summaryData.map(s => `
+    <div class="summary-section">
+      <div class="summary-section-title">${s.title}</div>
+      <div class="summary-rows">
+        ${s.rows.map(([k,v]) => `<div class="summary-row"><span class="sr-label">${k}</span><span class="sr-val">${v||'—'}</span></div>`).join('')}
+      </div>
+    </div>`).join('');
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="card">
+    <div class="card-title">Review Your Answers</div>
+    <div class="card-subtitle">Please review before submitting. Use the Back button to make any changes.</div>
+    <div class="summary-grid">${sections}</div>
+  </div>
+  <div class="btn-row" style="margin-top:0.5rem">
+    <button class="btn btn-secondary" onclick="prev()">← Back</button>
+    <button class="btn btn-gold" onclick="submit()">Submit Survey ✓</button>
+  </div>`;
+}
+
+function submit() {
+  document.getElementById('progressArea').style.display = 'none';
+  const ts = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('surveyBody').innerHTML = `
+  <div class="completion">
+    <div class="completion-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <path d="M6 14l6 6 10-10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2>Thank You, ${formData.contactName||'there'}!</h2>
+    <p>Your onboarding survey has been submitted. We'll review your details and be in touch within 1–2 business days to discuss your project.</p>
+    <div class="completion-meta">
+      <div class="meta-item"><strong>${formData.businessName||'Your Business'}</strong>Business</div>
+      <div class="meta-item"><strong>${ts}</strong>Submitted</div>
+      <div class="meta-item"><strong>${formData.pages.length} pages</strong>Selected</div>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print / Save PDF
+    </button>
+  </div>`;
+}
+
+function next() {
+  if (currentStep < steps.length - 1) {
+    currentStep++;
+    renderStep();
+  }
+}
+function prev() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderStep();
+  }
+}
+
+renderStep();
+</script>
+</body>
+</html>
